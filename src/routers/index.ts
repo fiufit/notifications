@@ -1,7 +1,8 @@
 import express from 'express';
-import { healthRouter } from '@routers/health-router';
+import { subscribersRouter } from '@routers/subscribers-router';
+import { notificationsRouter } from '@routers/notifications-router';
 
 const router = express.Router();
-router.use(healthRouter);
+router.use([ subscribersRouter, notificationsRouter ]);
 
 export { router };

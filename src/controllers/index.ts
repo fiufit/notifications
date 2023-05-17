@@ -1,3 +1,4 @@
-import { healthController } from '@controllers/health-controller';
+import { subscriberController } from '@controllers/subscribers-controller';
+import { notificationController } from '@controllers/notifications-controller';
 
-export { healthController };
+export { subscriberController, notificationController };
