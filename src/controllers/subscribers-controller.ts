@@ -1,12 +1,11 @@
+import { createSuccessResponse } from '@src/utils';
 import { Request, Response } from 'express';
 
 const createSubscriber = async (request: Request, response: Response) => {
-    response.send({
-        status: 'success',
-        data: {
-            body: request.body,
-        }
+    const successResponse = createSuccessResponse({
+        body: request.body,
     });
+    response.status(201).send(successResponse);
 };
 
 const subscriberController = {

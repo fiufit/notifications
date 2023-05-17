@@ -1,3 +1,4 @@
+import { createErrorResponse } from '@src/utils';
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
 
@@ -20,7 +21,12 @@ const validateRequest = <T extends z.ZodTypeAny>(schema: T) => (
     if (error instanceof ZodError) {
       response.status(400).send(error.issues);
     } else {
-      response.status(500).send({ error: 'Internal server error' });
+      const errorResponse = {
+        code: null,
+        message: 'Internal server error',
+        error: `${error}`,
+      };
+      response.status(500).send(createErrorResponse(errorResponse));
     }
   }
 };

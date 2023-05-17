@@ -10,6 +10,7 @@ const config: Config = {
     '^@controllers/(.*)$': '<rootDir>/src/controllers/$1',
     '^@routers/(.*)$': '<rootDir>/src/routers/$1',
     '^@schemas/(.*)$': '<rootDir>/src/schemas/$1',
+    '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
 };
 
