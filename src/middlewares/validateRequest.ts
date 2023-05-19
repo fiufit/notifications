@@ -1,4 +1,4 @@
-import { createErrorResponse } from '@src/utils';
+import { responseUtils, zodUtils } from '@src/utils';
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
 
@@ -19,14 +19,10 @@ const validateRequest = <T extends z.ZodTypeAny>(schema: T) => (
     next();
   } catch (error) {
     if (error instanceof ZodError) {
-      response.status(400).send(error.issues);
+      const parsedError =  zodUtils.parseZodError(error);
+      response.status(400).send(responseUtils.createFailResponse(parsedError));
     } else {
-      const errorResponse = {
-        code: null,
-        message: 'Internal server error',
-        error: `${error}`,
-      };
-      response.status(500).send(createErrorResponse(errorResponse));
+      throw error;
     }
   }
 };

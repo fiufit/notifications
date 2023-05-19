@@ -1,4 +1,4 @@
-import { CreateSubscriberSchema } from "@src/schemas";
+import { CreateSubscriberSchema } from "@src/controllers/schemas";
 import { z } from "zod";
 
 const obj = {

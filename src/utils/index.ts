@@ -1,3 +1,14 @@
-import { createSuccessResponse, createFailResponse, createErrorResponse } from "@utils/response-util";
+import { createSuccessResponse, createFailResponse, createErrorResponse } from "@utils/response-utils";
+import { parseZodError } from "@utils/zod-utils";
 
-export { createSuccessResponse, createFailResponse, createErrorResponse };
+const responseUtils = {
+    createSuccessResponse,
+    createFailResponse,
+    createErrorResponse,
+}
+
+const zodUtils = {
+    parseZodError,
+}
+
+export { responseUtils, zodUtils };
