@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { responseUtils } from '@src/utils';
 import { CreatePushNotificationType } from '@controllers/schemas';
+import { responseUtils } from '@src/utils';
 import { pushNotificationService } from '@src/services';
 
 const createNotification = async (request: Request, response: Response) => {
