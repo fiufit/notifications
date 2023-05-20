@@ -1,4 +1,4 @@
 import { subscriberController } from '@controllers/subscribers-controller';
-import { notificationController } from '@controllers/notifications-controller';
+import { pushNotificationController } from '@controllers/push-notifications-controller';
 
-export { subscriberController, notificationController };
+export { subscriberController, pushNotificationController };

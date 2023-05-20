@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const CreateNotificationSchema = z.object({
+const CreatePushNotificationSchema = z.object({
     body: z.object({
         to_user_id: z.string().array(),
         title: z.string(),
@@ -10,6 +10,6 @@ const CreateNotificationSchema = z.object({
     })
 })
 
-type CreateNotificationType = z.infer<typeof CreateNotificationSchema>;
+type CreatePushNotificationType = z.infer<typeof CreatePushNotificationSchema>;
 
-export { CreateNotificationSchema, CreateNotificationType };
+export { CreatePushNotificationSchema, CreatePushNotificationType };

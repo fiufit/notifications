@@ -1,7 +1,7 @@
 import { CreateSubscriberSchema, CreateSubscriberType } from '@src/controllers/schemas/subscriber-schemas';
-import { CreateNotificationSchema, CreateNotificationType } from '@src/controllers/schemas/notification-schemas';
+import { CreatePushNotificationSchema, CreatePushNotificationType } from '@src/controllers/schemas/push-notification-schemas';
 
 export { 
     CreateSubscriberSchema, CreateSubscriberType,
-    CreateNotificationSchema, CreateNotificationType
+    CreatePushNotificationSchema, CreatePushNotificationType
 };
