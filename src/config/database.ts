@@ -27,7 +27,7 @@ const _configureEventListeners = () => {
  * @description Establish a connection to the database. If an error
  * occurs no other tries to reconnect are attempt.
  */
-const connect = async (): Promise<void> => {
+const connect = async () => {
   const { databaseURI } = env;
 
   _configureEventListeners();

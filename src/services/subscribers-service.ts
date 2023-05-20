@@ -1,7 +1,9 @@
-import { CreateSubscriberType } from "@src/controllers/schemas";
+import { CreateSubscriber } from '@src/services/schemas';
+import { subscriberDatabase } from '@src/database';
 
-const createSubscriber = (subscriber: CreateSubscriberType) => {
-    console.log(subscriber);
+const createSubscriber = async (subscriber: CreateSubscriber) => {
+    const result = await subscriberDatabase.saveSubscriber(subscriber);
+    return result;
 };
 
 const subscriberService = {

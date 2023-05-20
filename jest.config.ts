@@ -8,7 +8,10 @@ const config: Config = {
     '^@src/(.*)$': '<rootDir>/src/$1',
     '^@config/(.*)$': '<rootDir>/src/config/$1',
     '^@controllers/(.*)$': '<rootDir>/src/controllers/$1',
+    "^@services/(.*)$": '<rootDir>/src/services/$1',
+    "^@database/(.*)$": '<rootDir>/src/database/$1',
     '^@routers/(.*)$': '<rootDir>/src/routers/$1',
+    '^@middlewares/(.*)$': '<rootDir>/src/middlewares/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
   },
 };
