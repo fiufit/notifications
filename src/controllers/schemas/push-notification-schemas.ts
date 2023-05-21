@@ -6,7 +6,7 @@ const CreatePushNotificationSchema = z.object({
         title: z.string(),
         subtitle: z.string().optional(),
         body: z.string().optional(),
-        sound: z.enum([ 'default' ]).optional(),
+        sound: z.enum([ 'default' ]).nullable(),
     })
 })
 

@@ -1,3 +1,10 @@
+const Issue = {
+    InvalidDeviceToken: {
+        code: 'invalid_device_token',
+        message: 'Device token is not a valid push token',
+    },
+}
+
 enum Status {
     Success = 'success',
     Fail = 'fail',
@@ -29,4 +36,4 @@ const createFailResponse = (data: Fail[]) => _createResponse(Status.Fail, data)
 
 const createErrorResponse = (data: Error) => _createResponse(Status.Error, data)
 
-export { createSuccessResponse, createFailResponse, createErrorResponse };
+export { createSuccessResponse, createFailResponse, createErrorResponse, Issue };
