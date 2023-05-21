@@ -15,7 +15,7 @@ const pushNotificationSchema = new mongoose.Schema({
     title: { type: String, required: true },
     subtitle: { type: String },
     body: { type: String },
-});
+}, { collection: 'push_notifications' });
 const PushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema);
 
 const _documentToPushNotification = (document: any): PushNotification => {

@@ -10,7 +10,7 @@ type CreateSubscriber = Omit<Subscriber, 'id'>;
 const subscriberSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     device_token: { type: String, required: true }, 
-});
+}, { collection: 'subscribers' });
 const SubscriberModel = mongoose.model('Subscriber', subscriberSchema);
 
 const _documentToSubscriber = (document: any): Subscriber => {

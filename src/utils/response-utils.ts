@@ -3,6 +3,10 @@ const Issue = {
         code: 'invalid_device_token',
         message: 'Device token is not a valid push token',
     },
+    NotFoundSubscribers: {
+        code: 'not_found_subscribers',
+        message: 'Subscribers not found in the database',
+    }
 }
 
 enum Status {
