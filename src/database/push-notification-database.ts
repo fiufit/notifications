@@ -1,4 +1,13 @@
+import { logger } from '@src/config';
+import { CreatePushNotificationType } from '@src/controllers/schemas';
 import mongoose from 'mongoose';
+
+enum Status {
+    Delivered = 'Delivered',
+    Pending = 'Pending',
+    Failed = 'Failed',
+    NotSent = 'NotSent'
+}
 
 type PushNotification = {
     id: string,
@@ -6,15 +15,22 @@ type PushNotification = {
     title: string,
     subtitle?: string,
     body?: string,
-    
+    sound?: CreatePushNotificationType['body']['sound'],
+    status?: Status,
+    expoReceiptId?: string,
 }
-type CreatePushNotification = Omit<PushNotification, 'id'>;
+type CreatePushNotification = Omit<PushNotification, 'id' | 'status'>;
+type UpdatePushNotification =  Pick<PushNotification, 'id'> & Partial<Omit<PushNotification, 'id'>>;
 
 const pushNotificationSchema = new mongoose.Schema({
     device_token: { type: String, required: true },
     title: { type: String, required: true },
     subtitle: { type: String },
     body: { type: String },
+    sound: { type: String },
+    status: { type: String, enum: (Object.keys(Status) as Array<keyof typeof Status>).map(key => Status[key]), default: Status.NotSent },
+    expoReceiptId: { type: String },
+
 }, { collection: 'push_notifications' });
 const PushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema);
 
@@ -25,38 +41,83 @@ const _documentToPushNotification = (document: any): PushNotification => {
         title: document.title,
         subtitle: document.subtitle,
         body: document.body,
+        sound: document.sound,
+        status: document.status,
     }
 }
 
 const findNotificationsByUserId = async (userId: string) => {
-    const documents = await PushNotificationModel.find({ device_token: userId });
-    const notifications = documents.map((document) => {
-        const notificationResult = _documentToPushNotification(document);
-        return notificationResult;
-    });
-    return notifications;
+    try {
+        const documents = await PushNotificationModel.find({ device_token: userId });
+        const notifications = documents.map((document) => {
+            const notificationResult = _documentToPushNotification(document);
+            return notificationResult;
+        });
+        return notifications;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
-
-const saveNotification = async (notification: CreatePushNotification): Promise<PushNotification> => {
-    const document =  await PushNotificationModel.create(notification);
-    const notificationResult = _documentToPushNotification(document);
-    return notificationResult;
+const findNotificationsByStatus = async (status: Status) => {
+    try {
+        const documents = await PushNotificationModel.find({ status });
+        const notifications = documents.map((document) => {
+            const notificationResult = _documentToPushNotification(document);
+            return notificationResult;
+        });
+        return notifications;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
-const saveAllNotifications = async (notifications: CreatePushNotification []): Promise<PushNotification[]> => {
-    const documents =  await PushNotificationModel.create(notifications);
-    const notificationsResult = documents.map((document) => {
-        const notificationResult = _documentToPushNotification(document);
-        return notificationResult;
-    });
-    return notificationsResult;
+const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
+    const updateOperations = [];
+    for (const notification of notifications) {
+        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
+        const update = notification;
+        const options = { orderder: false, forceServerObjectId: true };
+        const singleUpdateOperation = { 
+            updateOne : { filter, update, options },
+        }
+        updateOperations.push(singleUpdateOperation);
+    };
+    return updateOperations;
+}
+
+const updateAllNotifications = async (notifications: UpdatePushNotification[]) => {
+    try {
+        const updateOperations = _buildUpdateOperations(notifications);
+        const results = await PushNotificationModel.bulkWrite(updateOperations);
+        return results;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
+
+const saveAllNotifications = async (notifications: CreatePushNotification []) => {
+    try {
+        const documents =  await PushNotificationModel.create(notifications);
+        const notificationsResult = documents.map((document) => {
+            const notificationResult = _documentToPushNotification(document);
+            return notificationResult;
+        });
+        return notificationsResult;
+    } catch(error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
 const pushNotificationDatabase = {
     findNotificationsByUserId,
-    saveNotification,
     saveAllNotifications,
+    updateAllNotifications,
+    findNotificationsByStatus,
 }
 
-export { pushNotificationDatabase };
+export { pushNotificationDatabase, PushNotification, UpdatePushNotification, Status };
