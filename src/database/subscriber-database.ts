@@ -4,12 +4,14 @@ type Subscriber = {
     id: string,
     user_id: string,
     device_token: string,
+    unsubscribed: boolean,
 }
-type CreateSubscriber = Omit<Subscriber, 'id'>;
+type CreateSubscriber = Omit<Subscriber, 'id' | 'unsubscribed'>;
 
 const subscriberSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     device_token: { type: String, required: true }, 
+    unsubscribed: { type: Boolean, default: false },
 }, { collection: 'subscribers' });
 const SubscriberModel = mongoose.model('Subscriber', subscriberSchema);
 
@@ -18,6 +20,7 @@ const _documentToSubscriber = (document: any): Subscriber => {
         id: document._id.toString(),
         user_id: document.user_id,
         device_token: document.device_token,
+        unsubscribed: document.unsubscribed,
     }
 }
 
