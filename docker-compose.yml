@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  notifications:
+    container_name: notifications
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: base
+    expose:
+      - '7777'
+    ports:
+      - '7777:7771'
+    command: npm run start
