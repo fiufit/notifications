@@ -1,3 +1,4 @@
+import { logger } from '@src/config';
 import mongoose from 'mongoose';
 
 type Subscriber = {
@@ -25,19 +26,29 @@ const _documentToSubscriber = (document: any): Subscriber => {
 }
 
 const findAllSubcribersInUserIds = async (userIds: string []) => {
-    const documents = await SubscriberModel.find({ user_id: { $in: userIds } });
-    const subscribers = documents.map((document) => {
-        const subscriberResult = _documentToSubscriber(document);
-        return subscriberResult;
-    });
-    return subscribers;
+    try {
+        const documents = await SubscriberModel.find({ user_id: { $in: userIds } });
+        const subscribers = documents.map((document) => {
+            const subscriberResult = _documentToSubscriber(document);
+            return subscriberResult;
+        });
+        return subscribers;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
 
 const saveSubscriber = async (subscriber: CreateSubscriber): Promise<Subscriber> => {
-    const document =  await SubscriberModel.create(subscriber);
-    const subscriberResult = _documentToSubscriber(document);
-    return subscriberResult;
+    try {
+        const document =  await SubscriberModel.create(subscriber);
+        const subscriberResult = _documentToSubscriber(document);
+        return subscriberResult;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
 }
 
 const subscriberDatabase = {

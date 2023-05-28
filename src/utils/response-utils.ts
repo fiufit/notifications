@@ -1,13 +1,4 @@
-const Issue = {
-    InvalidDeviceToken: {
-        code: 'invalid_device_token',
-        message: 'Device token is not a valid push token',
-    },
-    NotFoundSubscribers: {
-        code: 'not_found_subscribers',
-        message: 'Subscribers not found in the database',
-    }
-}
+import httpStatus from "http-status"
 
 enum Status {
     Success = 'success',
@@ -23,14 +14,28 @@ interface Fail {
 
 interface Error {
     code: string,
-    message: string,
     error: string,
+    message: string,
 }
 
 const _createResponse = (status: Status, data: any | Fail | Error) => {
     return {
         status,
         data,
+    }
+}
+
+const Issue = {
+    InvalidDeviceToken: {
+        code: 'invalid_device_token',
+        message: 'Device token is not a valid push token',
+    },
+    NotFoundSubscribers: {
+        code: 'not_found_subscribers',
+        message: 'Subscribers not found in the database',
+    },
+    InternalServerError: {
+        code: httpStatus.INTERNAL_SERVER_ERROR.toString().toLowerCase(),
     }
 }
 

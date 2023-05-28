@@ -34,18 +34,6 @@ const pushNotificationSchema = new mongoose.Schema({
 }, { collection: 'push_notifications' });
 const PushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema);
 
-const _documentToPushNotification = (document: any): PushNotification => {
-    return { 
-        id: document._id.toString(),
-        device_token: document.device_token,
-        title: document.title,
-        subtitle: document.subtitle,
-        body: document.body,
-        sound: document.sound,
-        status: document.status,
-    }
-}
-
 const findNotificationsByUserId = async (userId: string) => {
     try {
         const documents = await PushNotificationModel.find({ device_token: userId });
@@ -74,20 +62,6 @@ const findNotificationsByStatus = async (status: Status) => {
     }
 }
 
-const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
-    const updateOperations = [];
-    for (const notification of notifications) {
-        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
-        const update = notification;
-        const options = { orderder: false, forceServerObjectId: true };
-        const singleUpdateOperation = { 
-            updateOne : { filter, update, options },
-        }
-        updateOperations.push(singleUpdateOperation);
-    };
-    return updateOperations;
-}
-
 const updateAllNotifications = async (notifications: UpdatePushNotification[]) => {
     try {
         const updateOperations = _buildUpdateOperations(notifications);
@@ -110,6 +84,32 @@ const saveAllNotifications = async (notifications: CreatePushNotification []) =>
     } catch(error) {
         logger.error(error);
         throw error;
+    }
+}
+
+const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
+    const updateOperations = [];
+    for (const notification of notifications) {
+        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
+        const update = notification;
+        const options = { orderder: false, forceServerObjectId: true };
+        const singleUpdateOperation = { 
+            updateOne : { filter, update, options },
+        }
+        updateOperations.push(singleUpdateOperation);
+    };
+    return updateOperations;
+}
+
+const _documentToPushNotification = (document: any): PushNotification => {
+    return { 
+        id: document._id.toString(),
+        device_token: document.device_token,
+        title: document.title,
+        subtitle: document.subtitle,
+        body: document.body,
+        sound: document.sound,
+        status: document.status,
     }
 }
 

@@ -217,7 +217,7 @@ const sendPushNotification = async (notifications: PushNotification[]) => {
     const notificationChunks = _chunkPushNotifications(notifications);
     const { pendingNotificationsToUpdate, failedNotificationsToUpdate } = await _sendPushNotificationChunks(notificationChunks);
     const notificationsToUpdate = [...pendingNotificationsToUpdate, ...failedNotificationsToUpdate];
-    await pushNotificationDatabase.updateAllNotifications(notificationsToUpdate);
+    return await pushNotificationDatabase.updateAllNotifications(notificationsToUpdate);
 }
 
 export { sendPushNotification, updateNotificationReceipts };
