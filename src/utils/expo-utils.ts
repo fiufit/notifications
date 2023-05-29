@@ -148,6 +148,7 @@ const _processPushNotificationReceiptChunks = async (receiptChunks: { data: { id
         const notifications = chunk.map(receipt => receipt.notification);
         try {
             const expoReceipts = await expo.getPushNotificationReceiptsAsync(receiptIds);
+
             const { successResults, errorResults } = _validateNotificationReceipts(expoReceipts, notifications);
 
             const successNotifications = successResults.map(result => {
@@ -186,7 +187,6 @@ const _processPushNotificationReceiptChunks = async (receiptChunks: { data: { id
 const _chunkPushNotificationReceipts = (pendingNotifications: PushNotification[]) => {
     const receiptIds = pendingNotifications.map(notification => notification.expoReceiptId) as string[];
     const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-
     const receiptChunks = [];
     let chunkCounter = 0;
     let lastChunkLength = 0;

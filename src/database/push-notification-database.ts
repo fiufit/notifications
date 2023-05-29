@@ -110,6 +110,7 @@ const _documentToPushNotification = (document: any): PushNotification => {
         body: document.body,
         sound: document.sound,
         status: document.status,
+        expoReceiptId: document.expoReceiptId,
     }
 }
 
