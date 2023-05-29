@@ -4,6 +4,6 @@ import { CreateSubscriberSchema } from '@src/controllers/schemas';
 import { validateRequest } from '@src/middlewares';
 
 const subscribersRouter = express.Router();
-subscribersRouter.post('/notifications/subscribers', validateRequest(CreateSubscriberSchema), subscriberController.createSubscriber);
+subscribersRouter.post('/subscribers', validateRequest(CreateSubscriberSchema), subscriberController.createSubscriber);
 
 export { subscribersRouter };
