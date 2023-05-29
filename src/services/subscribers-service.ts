@@ -1,8 +1,8 @@
 import { CreateSubscriber } from '@src/services/schemas';
-import { subscriberDatabase } from '@src/database';
+import { subscriberRepository } from '@src/repositories';
 
 const createSubscriber = async (subscriber: CreateSubscriber) => {
-    const result = await subscriberDatabase.saveSubscriber(subscriber);
+    const result = await subscriberRepository.saveSubscriber(subscriber);
     return result;
 };
 

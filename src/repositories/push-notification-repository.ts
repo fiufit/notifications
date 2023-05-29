@@ -114,11 +114,11 @@ const _documentToPushNotification = (document: any): PushNotification => {
     }
 }
 
-const pushNotificationDatabase = {
+const pushNotificationRepository = {
     findNotificationsByUserId,
     saveAllNotifications,
     updateAllNotifications,
     findNotificationsByStatus,
 }
 
-export { pushNotificationDatabase, PushNotification, UpdatePushNotification, Status };
+export { pushNotificationRepository, PushNotification, UpdatePushNotification, Status };

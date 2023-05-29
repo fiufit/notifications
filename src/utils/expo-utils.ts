@@ -1,4 +1,4 @@
-import { PushNotification, pushNotificationDatabase, Status, UpdatePushNotification } from '@database/push-notification-database';
+import { PushNotification, pushNotificationRepository, Status, UpdatePushNotification } from '@src/repositories/push-notification-repository';
 import { logger } from '@src/config';
 import { 
     Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushSuccessTicket, ExpoPushReceipt, ExpoPushErrorTicket, ExpoPushErrorReceipt,
@@ -205,18 +205,18 @@ const _chunkPushNotificationReceipts = (pendingNotifications: PushNotification[]
 }
 
 const updateNotificationReceipts = async () => {
-    const pendingNotifications = await pushNotificationDatabase.findNotificationsByStatus(Status.Pending);
+    const pendingNotifications = await pushNotificationRepository.findNotificationsByStatus(Status.Pending);
     const receiptChunks = _chunkPushNotificationReceipts(pendingNotifications);
     const { successNotificationsToUpdate, failedNotificationsToUpdate } = await _processPushNotificationReceiptChunks(receiptChunks);
     const notificationsToUpdate = [...successNotificationsToUpdate, ...failedNotificationsToUpdate];
-    await pushNotificationDatabase.updateAllNotifications(notificationsToUpdate);
+    await pushNotificationRepository.updateAllNotifications(notificationsToUpdate);
 }
 
 const sendPushNotification = async (notifications: PushNotification[]) => {
     const notificationChunks = _chunkPushNotifications(notifications);
     const { pendingNotificationsToUpdate, failedNotificationsToUpdate } = await _sendPushNotificationChunks(notificationChunks);
     const notificationsToUpdate = [...pendingNotificationsToUpdate, ...failedNotificationsToUpdate];
-    return await pushNotificationDatabase.updateAllNotifications(notificationsToUpdate);
+    return await pushNotificationRepository.updateAllNotifications(notificationsToUpdate);
 }
 
 export { sendPushNotification, updateNotificationReceipts };

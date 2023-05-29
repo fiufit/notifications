@@ -5,14 +5,14 @@ type Subscriber = {
     id: string,
     user_id: string,
     device_token: string,
-    unsubscribed: boolean,
+    subscribed: boolean,
 }
-type CreateSubscriber = Omit<Subscriber, 'id' | 'unsubscribed'>;
+type CreateSubscriber = Omit<Subscriber, 'id' | 'subscribed'>;
 
 const subscriberSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     device_token: { type: String, required: true }, 
-    unsubscribed: { type: Boolean, default: false },
+    subscribed: { type: Boolean, default: true },
 }, { collection: 'subscribers' });
 const SubscriberModel = mongoose.model('Subscriber', subscriberSchema);
 
@@ -21,7 +21,7 @@ const _documentToSubscriber = (document: any): Subscriber => {
         id: document._id.toString(),
         user_id: document.user_id,
         device_token: document.device_token,
-        unsubscribed: document.unsubscribed,
+        subscribed: document.subscribed,
     }
 }
 
@@ -51,9 +51,9 @@ const saveSubscriber = async (subscriber: CreateSubscriber): Promise<Subscriber>
     }
 }
 
-const subscriberDatabase = {
+const subscriberRepository = {
     findAllSubcribersInUserIds,
     saveSubscriber,
 }
 
-export { subscriberDatabase };
+export { subscriberRepository };

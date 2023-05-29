@@ -34,7 +34,7 @@
       "@config/*": ["src/config/*"],
       "@controllers/*": ["src/controllers/*"],
       "@services/*": ["src/services/*"],
-      "@database/*": ["src/database/*"],
+      "@database/*": ["src/repositories/*"],
       "@routers/*": ["src/routers/*"],
       "@middlewares/*": ["src/middlewares/*"],
       "@utils/*": ["src/utils/*"],
