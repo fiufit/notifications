@@ -148,7 +148,6 @@ const _processPushNotificationReceiptChunks = async (receiptChunks: { data: { id
         const notifications = chunk.map(receipt => receipt.notification);
         try {
             const expoReceipts = await expo.getPushNotificationReceiptsAsync(receiptIds);
-
             const { successResults, errorResults } = _validateNotificationReceipts(expoReceipts, notifications);
 
             const successNotifications = successResults.map(result => {
