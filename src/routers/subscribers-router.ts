@@ -43,8 +43,18 @@ const subscribersRouter = express.Router();
  *     responses:
  *       201:
  *         description: Subscriber created
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/SuccessResponse'
  *       500:
  *         description: Internal Server Error - An error occurred while processing the request.
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/ErrorResponse'
  * 
  */
 subscribersRouter.post('/subscribers', validateRequest(CreateSubscriberSchema), subscriberController.createSubscriber);
