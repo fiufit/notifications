@@ -16,7 +16,7 @@ const createNotification = async (request: Request, response: Response) => {
                 code: Issue.NotFoundSubscribers.code,
                 message: Issue.NotFoundSubscribers.message,
             }]);
-            response.status(httpStatus.NOT_FOUND).send(failResponse);
+            response.status(httpStatus.OK).send(failResponse);
         } else {
             const successResponse = responseUtils.createSuccessResponse(notifications);
             response.status(httpStatus.CREATED).send(successResponse);

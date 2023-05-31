@@ -14,7 +14,7 @@ const subscribersRouter = express.Router();
  *       properties:
  *         user_id: 
  *           type: string
- *           description: User ID of the user being subscribed
+ *           description: User ID of the new subscriber
  *         device_token:
  *           type: string
  *           description: Device Expo Token that identifies the user device
@@ -30,7 +30,7 @@ const subscribersRouter = express.Router();
  * @swagger
  * /api/v1/subscribers:
  *   post:
- *     summary: Create a new subscribers
+ *     summary: Create a new subscriber
  *     tags:
  *       - CreateSubscriber
  *     requestBody:
@@ -42,9 +42,9 @@ const subscribersRouter = express.Router();
  *             $ref: '#components/schemas/CreateSubscriber'
  *     responses:
  *       201:
- *         description: Subscriber created successfully
+ *         description: Subscriber created
  *       500:
- *         description: Internal server error
+ *         description: Internal Server Error - An error occurred while processing the request.
  * 
  */
 subscribersRouter.post('/subscribers', validateRequest(CreateSubscriberSchema), subscriberController.createSubscriber);
