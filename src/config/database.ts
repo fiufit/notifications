@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { env } from '@src/config/env';
 import { logger } from '@src/config/logger';
+import { cron } from '@config/cron';
 
 /**
  * @description Configure event listeners to the database.
@@ -16,6 +17,7 @@ const _configureEventListeners = () => {
 
   mongoose.connection.on('connected', () => {
     logger.info('Database connection established');
+    cron.scheduleCheckReceipts();
   });
 
   mongoose.connection.on('disconnected', () => {
@@ -27,7 +29,7 @@ const _configureEventListeners = () => {
  * @description Establish a connection to the database. If an error
  * occurs no other tries to reconnect are attempt.
  */
-const connect = async (): Promise<void> => {
+const connect = async () => {
   const { databaseURI } = env;
 
   _configureEventListeners();
