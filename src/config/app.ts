@@ -26,10 +26,82 @@ const swaggerSpec = {
                 url: `http://${env.host}:${env.port}`,
             }
         ],
+        components: {
+            schemas: {
+                SuccessResponse: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            value: 'success',
+                        },
+                        data: {
+                            type: 'object'
+                        },
+                    },
+                    required: ['status', 'data'],
+                },
+                FailResponse: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            value: 'fail',
+                        },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                code: {
+                                    type: 'string',
+                                    description: 'Unique code that identifies the failure'
+                                },
+                                message: {
+                                    type: 'string',
+                                    description: 'Cause of the failure'
+                                },
+                                path: {
+                                    type: 'string',
+                                    description: 'Path to the field that is causing the failure'
+                                }
+                            },
+                            required: ['code', 'message'],
+                        },
+                    },
+                    required: ['status', 'data'],
+                },
+                ErrorResponse: {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            value: 'error',
+                        },
+                        data: {
+                            type: 'object',
+                            properties: {
+                                code: {
+                                    type: 'string',
+                                    description: 'Unique code that identifies the failure'
+                                },
+                                error: {
+                                    type: 'string',
+                                    description: 'Name of the error'
+                                },
+                                message: {
+                                    type: 'string',
+                                    description: 'Cause of the error'
+                                },
+                            },
+                            required: ['code', 'error', 'message']
+                        },
+                    },
+                    required: ['status', 'data'],
+                }
+            }
+        }
     },
     apis: [`${path.join(__dirname, '../routers/*.ts')}`],
     schemes: ['http'],
-
 }
 const swaggerDoc = swaggerJsDoc(swaggerSpec);
 app.use('/api/v1/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDoc));

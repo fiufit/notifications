@@ -48,7 +48,7 @@ const pusNotificationsRouter = express.Router();
  * @swagger
  * /api/v1/notifications/push:
  *   post:
- *     summary: Create a new subscriber
+ *     summary: Create a new push notification
  *     tags:
  *       - CreatePushNotification
  *     requestBody:
@@ -61,12 +61,26 @@ const pusNotificationsRouter = express.Router();
  *     responses:
  *       200:
  *         description: |
- *           Ok - The request was successful but could not be processed because there are 
- *           no subscribers to receive the notification.
+ *           Ok - The request was successful but could not be processed
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/FailResponse'
  *       201:
  *         description: Notification created
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/SuccessResponse'
  *       500:
- *         description: Internal Server Error - An error occurred while processing the request.
+ *         description: Internal Server Error - An error occurred while processing the request
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/ErrorResponse'
  * 
  */
 pusNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
