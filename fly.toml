@@ -8,7 +8,7 @@ primary_region = "eze"
 processes = []
 
 [[services]]
-  internal_port = 8080
+  internal_port = 7777
   processes = ["app"]
   protocol = "tcp"
   [services.concurrency]
