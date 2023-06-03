@@ -8,8 +8,8 @@ enum Name {
 }
 
 // Default values
-const DEFAULT_HOST = '127.0.0.1';
-const DEFAULT_PORT = 7777;
+const DEFAULT_HOST = '0.0.0.0';
+const DEFAULT_PORT = 8080;
 const DEFAULT_DB_URI = '';
 
 // Set environment variables
