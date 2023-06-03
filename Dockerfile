@@ -4,5 +4,6 @@ WORKDIR /usr/fiufit/notifications
 COPY package.json package-lock.json ./
 RUN npm install
 COPY . .
+EXPOSE ${PORT}
 RUN npm run build
-RUN npm run start
+CMD npm run start
