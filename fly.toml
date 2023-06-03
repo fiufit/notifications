@@ -25,5 +25,5 @@ processes = []
     handlers = ["tls", "http"]
     port = 443
 [env]
-  PORT = "7771"
+  PORT = "8080"
   HOST = "0.0.0.0"
