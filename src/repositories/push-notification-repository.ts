@@ -1,6 +1,7 @@
 import { logger } from '@src/config';
 import { CreatePushNotificationType } from '@src/controllers/schemas';
 import mongoose from 'mongoose';
+import { MongoBulkWriteError, BulkWriteResult } from 'mongodb';
 
 enum Status {
     Delivered = 'Delivered',
@@ -11,6 +12,7 @@ enum Status {
 
 type PushNotification = {
     id: string,
+    user_id: string,
     device_token: string,
     title: string,
     subtitle?: string,
@@ -23,6 +25,7 @@ type CreatePushNotification = Omit<PushNotification, 'id' | 'status'>;
 type UpdatePushNotification =  Pick<PushNotification, 'id'> & Partial<Omit<PushNotification, 'id'>>;
 
 const pushNotificationSchema = new mongoose.Schema({
+    user_id: { type: String, required: true },
     device_token: { type: String, required: true },
     title: { type: String, required: true },
     subtitle: { type: String },
@@ -65,9 +68,12 @@ const findNotificationsByStatus = async (status: Status) => {
 const updateAllNotifications = async (notifications: UpdatePushNotification[]) => {
     try {
         const updateOperations = _buildUpdateOperations(notifications);
-        const results = await PushNotificationModel.bulkWrite(updateOperations);
+        const results: BulkWriteResult = await PushNotificationModel.bulkWrite(updateOperations);
         return results;
     } catch (error) {
+        if (error instanceof MongoBulkWriteError) {
+            logger.error('MongoBulkWriteError');
+        }
         logger.error(error);
         throw error;
     }
@@ -75,7 +81,7 @@ const updateAllNotifications = async (notifications: UpdatePushNotification[]) =
 
 const saveAllNotifications = async (notifications: CreatePushNotification []) => {
     try {
-        const documents =  await PushNotificationModel.create(notifications);
+        const documents = await PushNotificationModel.create(notifications);
         const notificationsResult = documents.map((document) => {
             const notificationResult = _documentToPushNotification(document);
             return notificationResult;
@@ -92,7 +98,7 @@ const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
     for (const notification of notifications) {
         const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
         const update = notification;
-        const options = { orderder: false, forceServerObjectId: true };
+        const options = { orderder: false, forceServerObjectId: true, ordered: false };
         const singleUpdateOperation = { 
             updateOne : { filter, update, options },
         }
@@ -104,12 +110,12 @@ const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
 const _documentToPushNotification = (document: any): PushNotification => {
     return { 
         id: document._id.toString(),
+        user_id: document.user_id,
         device_token: document.device_token,
         title: document.title,
         subtitle: document.subtitle,
         body: document.body,
         sound: document.sound,
-        status: document.status,
         expoReceiptId: document.expoReceiptId,
     }
 }
