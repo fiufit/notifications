@@ -3,12 +3,14 @@ version: "3.8"
 services:
   notifications:
     container_name: notifications
+    environment:
+      - PORT=${PORT}
     build:
       context: .
       dockerfile: Dockerfile
       target: base
     expose:
-      - '7777'
+      - '${PORT}'
     ports:
-      - '7777:7777'
+      - '${PORT}:${PORT}'
     command: npm run start
