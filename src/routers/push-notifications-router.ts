@@ -32,7 +32,13 @@ const pusNotificationsRouter = express.Router();
  *             - default
  *           description: |
  *             Play a sound when the recipient receives this notification. Specify "default" to play 
- *             the device's default notification sound, or omit this field to play no sound 
+ *             the device's default notification sound, or omit this field to play no sound
+ *         data:
+ *           type: object
+ *           properties:
+ *             redirect_to: 
+ *               type: string
+ *               description: Redirect to a part of the application
  *       required:
  *         - to_user_id
  *         - title
@@ -42,6 +48,9 @@ const pusNotificationsRouter = express.Router();
  *         subtitle: Maria has started following you
  *         body: Congrats, you have a new follower!
  *         sound: default
+ *         data:
+ *           redirect_to: users_profile
+ * 
  */
 
 /** 

@@ -4,13 +4,13 @@ import { pushNotificationRepository, subscriberRepository } from '@src/repositor
 import { sendPushNotification } from '@utils/expo-utils';
 
 const createNotification = async (notification: CreatePushNotification) => {
-    const { to_user_id: toUserId, title, subtitle, body, sound } = notification;
+    const { to_user_id: toUserId, title, subtitle, body, sound, data } = notification;
     const subscribers = await subscriberRepository.findAllSubcribersInUserIds(toUserId);
 
     if (subscribers.length === 0) { return []; }
     const notificationsToSave = subscribers.map(subscriber => {
         const { user_id, device_token } = subscriber;
-        return { user_id, device_token, title, subtitle, body, sound: sound as CreatePushNotificationType['body']['sound'] };
+        return { user_id, device_token, title, subtitle, body, sound: sound as CreatePushNotificationType['body']['sound'], data };
     });
     const notificationsToSend = await pushNotificationRepository.saveAllNotifications(notificationsToSave);
     await sendPushNotification(notificationsToSend);

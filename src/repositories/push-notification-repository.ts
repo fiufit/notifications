@@ -10,6 +10,15 @@ enum Status {
     NotSent = 'NotSent'
 }
 
+// Data subdocument, stores the payload of the notification
+type Data = {
+    redirect_to?: string
+}
+
+const dataSchema = new mongoose.Schema({
+    redirect_to: { type: String }
+}, { _id: false });
+
 type PushNotification = {
     id: string,
     user_id: string,
@@ -20,6 +29,7 @@ type PushNotification = {
     sound?: CreatePushNotificationType['body']['sound'],
     status?: Status,
     expoReceiptId?: string,
+    data?: Data,
 }
 type CreatePushNotification = Omit<PushNotification, 'id' | 'status'>;
 type UpdatePushNotification =  Pick<PushNotification, 'id'> & Partial<Omit<PushNotification, 'id'>>;
@@ -33,6 +43,7 @@ const pushNotificationSchema = new mongoose.Schema({
     sound: { type: String },
     status: { type: String, enum: (Object.keys(Status) as Array<keyof typeof Status>).map(key => Status[key]), default: Status.NotSent },
     expoReceiptId: { type: String },
+    data: dataSchema
 
 }, { collection: 'push_notifications' });
 const PushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema);
@@ -117,6 +128,7 @@ const _documentToPushNotification = (document: any): PushNotification => {
         body: document.body,
         sound: document.sound,
         expoReceiptId: document.expoReceiptId,
+        data: document.data,
     }
 }
 
