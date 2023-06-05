@@ -8,6 +8,7 @@ type Subscriber = {
     subscribed: boolean,
 }
 type CreateSubscriber = Omit<Subscriber, 'id' | 'subscribed'>;
+type UpdateSubscriber = Pick<Subscriber, 'id'> & Partial<Omit<Subscriber, 'id'>>;
 
 const subscriberSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
@@ -51,9 +52,23 @@ const saveSubscriber = async (subscriber: CreateSubscriber): Promise<Subscriber>
     }
 }
 
+const updateSubscriber = async (subscriber: UpdateSubscriber) => {
+    try {
+        const filter = { _id: new mongoose.Types.ObjectId(subscriber.id) };
+        const options = { returnOriginal: false };
+        const document = await SubscriberModel.findOneAndUpdate(filter, subscriber, options);
+        const updateResult = _documentToSubscriber(document);
+        return updateResult;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
+
 const subscriberRepository = {
     findAllSubcribersInUserIds,
     saveSubscriber,
+    updateSubscriber,
 }
 
 export { subscriberRepository };

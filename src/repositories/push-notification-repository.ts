@@ -109,7 +109,7 @@ const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
     for (const notification of notifications) {
         const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
         const update = notification;
-        const options = { orderder: false, forceServerObjectId: true, ordered: false };
+        const options = { forceServerObjectId: true, ordered: false }; // ESTO NO ESTA BIEN. No existe en mongo para updateOne
         const singleUpdateOperation = { 
             updateOne : { filter, update, options },
         }

@@ -3,7 +3,7 @@ import { pushNotificationController } from '@src/controllers';
 import { validateRequest } from '@src/middlewares';
 import { CreatePushNotificationSchema } from '@src/controllers/schemas';
 
-const pusNotificationsRouter = express.Router();
+const pushNotificationsRouter = express.Router();
 
 /** 
  * @swagger
@@ -50,7 +50,6 @@ const pusNotificationsRouter = express.Router();
  *         sound: default
  *         data:
  *           redirect_to: users_profile
- * 
  */
 
 /** 
@@ -92,6 +91,6 @@ const pusNotificationsRouter = express.Router();
  *               $ref: '#components/schemas/ErrorResponse'
  * 
  */
-pusNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
+pushNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
 
-export { pusNotificationsRouter };
+export { pushNotificationsRouter };
