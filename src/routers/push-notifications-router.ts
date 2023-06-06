@@ -3,7 +3,7 @@ import { pushNotificationController } from '@src/controllers';
 import { validateRequest } from '@src/middlewares';
 import { CreatePushNotificationSchema } from '@src/controllers/schemas';
 
-const pusNotificationsRouter = express.Router();
+const pushNotificationsRouter = express.Router();
 
 /** 
  * @swagger
@@ -32,7 +32,10 @@ const pusNotificationsRouter = express.Router();
  *             - default
  *           description: |
  *             Play a sound when the recipient receives this notification. Specify "default" to play 
- *             the device's default notification sound, or omit this field to play no sound 
+ *             the device's default notification sound, or omit this field to play no sound
+ *         data:
+ *           type: any
+ *           description: Payload to send within the notification to the application
  *       required:
  *         - to_user_id
  *         - title
@@ -42,6 +45,7 @@ const pusNotificationsRouter = express.Router();
  *         subtitle: Maria has started following you
  *         body: Congrats, you have a new follower!
  *         sound: default
+ *         data: {}
  */
 
 /** 
@@ -83,6 +87,6 @@ const pusNotificationsRouter = express.Router();
  *               $ref: '#components/schemas/ErrorResponse'
  * 
  */
-pusNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
+pushNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
 
-export { pusNotificationsRouter };
+export { pushNotificationsRouter };

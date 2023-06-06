@@ -11,13 +11,14 @@ enum ExpoStatus {
     Error = 'error',
 }
 
-const _buildExpoNotification = (notification: PushNotification) => {
+const _buildExpoNotification = (notification: PushNotification): ExpoPushMessage => {
     return { 
         to: notification.device_token,
         title: notification.title,
         subtitle: notification.subtitle,
         body: notification.body,
         sound: notification.sound as ExpoPushMessage['sound'],
+        data: notification.data,
     }
 }
 

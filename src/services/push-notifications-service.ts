@@ -4,17 +4,28 @@ import { pushNotificationRepository, subscriberRepository } from '@src/repositor
 import { sendPushNotification } from '@utils/expo-utils';
 
 const createNotification = async (notification: CreatePushNotification) => {
-    const { to_user_id: toUserId, title, subtitle, body, sound } = notification;
+    const { to_user_id: toUserId, title, subtitle, body, sound, data } = notification;
     const subscribers = await subscriberRepository.findAllSubcribersInUserIds(toUserId);
-    const deviceTokens = subscribers.map(subscriber => subscriber.device_token);
+    if (subscribers.length === 0) { return []; }
 
-    if (deviceTokens.length === 0) { return []; }
-    const notificationsToSave = deviceTokens.map(deviceToken => {
-        return { device_token: deviceToken, title, subtitle, body, sound: sound as CreatePushNotificationType['body']['sound'] };
-    });
-    const notificationsToSend = await pushNotificationRepository.saveAllNotifications(notificationsToSave);
-    await sendPushNotification(notificationsToSend);
-    return notificationsToSend;
+    const notificationToSend = [];
+    const notificationsNotToSend = [];
+    for (const subscriber of subscribers) {
+        const { user_id, device_token } = subscriber;
+        const notifySubscriber = subscriber.subscribed === true;
+        const notification = { 
+            user_id, device_token, title, subtitle, body, sound: sound as CreatePushNotificationType['body']['sound'], data 
+        };
+        if (notifySubscriber) notificationToSend.push(notification);
+        else notificationsNotToSend.push(notification);
+    }
+    
+    const [notificationsToSendSaved, notificationsNotToSendSaved] = await Promise.all([
+        pushNotificationRepository.saveAllNotifications(notificationToSend), 
+        pushNotificationRepository.saveAllNotifications(notificationsNotToSend)
+    ]);
+    await sendPushNotification(notificationsToSendSaved);
+    return [...notificationsToSendSaved, ...notificationsNotToSendSaved];
 };
 
 const pushNotificationService = {

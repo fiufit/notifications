@@ -12,6 +12,19 @@ const CreateSubscriberSchema = z.object({
     })
 })
 
-type CreateSubscriberType = z.infer<typeof CreateSubscriberSchema>;
+const PatchSubscriberSchema = z.object({
+    params: z.object({
+        id: z.string(),
+    }),
+    body: z.object({
+        subscribed: z.boolean(),
+    })
+})
 
-export { CreateSubscriberSchema, CreateSubscriberType };
+type CreateSubscriberType = z.infer<typeof CreateSubscriberSchema>;
+type PatchSubscriberType = z.infer<typeof PatchSubscriberSchema>;
+
+export { 
+    CreateSubscriberSchema, CreateSubscriberType,
+    PatchSubscriberSchema, PatchSubscriberType
+};
