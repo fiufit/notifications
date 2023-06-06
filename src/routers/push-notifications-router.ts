@@ -34,11 +34,8 @@ const pushNotificationsRouter = express.Router();
  *             Play a sound when the recipient receives this notification. Specify "default" to play 
  *             the device's default notification sound, or omit this field to play no sound
  *         data:
- *           type: object
- *           properties:
- *             redirect_to: 
- *               type: string
- *               description: Redirect to a part of the application
+ *           type: any
+ *           description: Payload to send within the notification to the application
  *       required:
  *         - to_user_id
  *         - title
@@ -48,8 +45,7 @@ const pushNotificationsRouter = express.Router();
  *         subtitle: Maria has started following you
  *         body: Congrats, you have a new follower!
  *         sound: default
- *         data:
- *           redirect_to: users_profile
+ *         data: {}
  */
 
 /** 
