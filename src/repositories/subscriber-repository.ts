@@ -29,7 +29,7 @@ const _documentToSubscriber = (document: any): Subscriber => {
 const findAllSubcribersInUserIds = async (userIds: string []) => {
     try {
         const documents = await SubscriberModel.find({ user_id: { $in: userIds } });
-        const subscribers = documents.map((document) => {
+        const subscribers: Subscriber[] = documents.map((document) => {
             const subscriberResult = _documentToSubscriber(document);
             return subscriberResult;
         });
