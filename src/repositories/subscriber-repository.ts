@@ -15,6 +15,7 @@ const subscriberSchema = new mongoose.Schema({
     device_token: { type: String, required: true }, 
     subscribed: { type: Boolean, default: true },
 }, { collection: 'subscribers' });
+subscriberSchema.index({ user_id: 1, device_token: 1 }, { unique: true });
 const SubscriberModel = mongoose.model('Subscriber', subscriberSchema);
 
 const _documentToSubscriber = (document: any): Subscriber => {
@@ -23,6 +24,18 @@ const _documentToSubscriber = (document: any): Subscriber => {
         user_id: document.user_id,
         device_token: document.device_token,
         subscribed: document.subscribed,
+    }
+}
+
+const findSubscriberByUserIdAndDeviceToken = async (userId: string, deviceToken: string) => {
+    try {
+        const document = await SubscriberModel.findOne({ user_id: userId, device_token: deviceToken });
+        if (!document) return null;
+        const subscriber = _documentToSubscriber(document);
+        return subscriber;
+    } catch (error) {
+        logger.error(error);
+        throw error;
     }
 }
 
@@ -40,13 +53,12 @@ const findAllSubcribersInUserIds = async (userIds: string []) => {
     }
 }
 
-
 const saveSubscriber = async (subscriber: CreateSubscriber): Promise<Subscriber> => {
     try {
         const document =  await SubscriberModel.create(subscriber);
         const subscriberResult = _documentToSubscriber(document);
         return subscriberResult;
-    } catch (error) {
+    } catch (error: any) {
         logger.error(error);
         throw error;
     }
@@ -66,6 +78,7 @@ const updateSubscriber = async (subscriber: UpdateSubscriber) => {
 }
 
 const subscriberRepository = {
+    findSubscriberByUserIdAndDeviceToken,
     findAllSubcribersInUserIds,
     saveSubscriber,
     updateSubscriber,
