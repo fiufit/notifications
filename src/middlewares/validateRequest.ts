@@ -1,3 +1,4 @@
+import { logger } from '@src/config';
 import { responseUtils, zodUtils } from '@src/utils';
 import { Request, Response, NextFunction } from 'express';
 import { z, ZodError } from 'zod';
@@ -21,6 +22,7 @@ const validateRequest = <T extends z.ZodTypeAny>(schema: T) => (
     if (error instanceof ZodError) {
       const parsedError =  zodUtils.parseZodError(error);
       response.status(400).send(responseUtils.createFailResponse(parsedError));
+      logger.error(error);
     } else {
       throw error;
     }
