@@ -4,7 +4,7 @@ import { subscriberRepository } from '@src/repositories';
 const createSubscriber = async (subscriber: CreateSubscriber) => {
     const subscriberFound = await subscriberRepository.findSubscriberByUserIdAndDeviceToken(subscriber.user_id, subscriber.device_token);
     if (subscriberFound) {
-        return subscriberFound;
+        return await subscriberRepository.updateSubscriber({ ...subscriberFound, subscribed: true});
     } else {
         const result = await subscriberRepository.saveSubscriber(subscriber);
         return result;
