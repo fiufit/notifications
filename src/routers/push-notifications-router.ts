@@ -52,7 +52,7 @@ const pushNotificationsRouter = express.Router();
  * @swagger
  * components:
  *   schemas:
- *     PatchSubscriber:
+ *     PatchNotification:
  *       type: object
  *       properties:
  *         read: 
@@ -154,13 +154,13 @@ pushNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNo
  *   patch:
  *     summary: Update a notification
  *     tags:
- *       - PatchSubscriber
+ *       - PatchNotification
  *     requestBody:
  *       content: 
  *         application/json:
  *           schema:
  *             type: object
- *             $ref: '#components/schemas/PatchSubscriber'
+ *             $ref: '#components/schemas/PatchNotification'
  *     responses:
  *       200:
  *         description: Notification updated
