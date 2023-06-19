@@ -5,6 +5,7 @@ import {
 import { 
     CreatePushNotificationSchema, CreatePushNotificationType,
     GetPushNotificationSchema, GetPushNotificationType,
+    PatchPushNotificationSchema, PatchPushNotificationType,
 } from '@src/controllers/schemas/push-notification-schemas';
 
 export { 
@@ -12,4 +13,5 @@ export {
     CreatePushNotificationSchema, CreatePushNotificationType,
     PatchSubscriberSchema, PatchSubscriberType,
     GetPushNotificationSchema, GetPushNotificationType,
+    PatchPushNotificationSchema, PatchPushNotificationType,
 };

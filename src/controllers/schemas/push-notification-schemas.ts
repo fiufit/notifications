@@ -20,10 +20,21 @@ const CreatePushNotificationSchema = z.object({
     })
 })
 
+const PatchPushNotificationSchema = z.object({
+    params: z.object({
+        notification_id: z.string(),
+    }),
+    body: z.object({
+        read: z.boolean().optional(),
+    })
+})
+
 type CreatePushNotificationType = z.infer<typeof CreatePushNotificationSchema>;
 type GetPushNotificationType = z.infer<typeof GetPushNotificationSchema>;
+type PatchPushNotificationType = z.infer<typeof PatchPushNotificationSchema>;
 
 export {
     CreatePushNotificationSchema, CreatePushNotificationType,
     GetPushNotificationSchema, GetPushNotificationType,    
+    PatchPushNotificationSchema, PatchPushNotificationType,
 };

@@ -1,7 +1,7 @@
 import express from 'express';
 import { pushNotificationController } from '@src/controllers';
 import { validateRequest } from '@src/middlewares';
-import { CreatePushNotificationSchema, GetPushNotificationSchema } from '@src/controllers/schemas';
+import { CreatePushNotificationSchema, GetPushNotificationSchema, PatchPushNotificationSchema } from '@src/controllers/schemas';
 
 const pushNotificationsRouter = express.Router();
 
@@ -48,7 +48,63 @@ const pushNotificationsRouter = express.Router();
  *         data: {}
  */
 
-// TODO: ADD DOCS
+/** 
+ * @swagger
+ * components:
+ *   schemas:
+ *     PatchSubscriber:
+ *       type: object
+ *       properties:
+ *         read: 
+ *           type: bool
+ *           description: Set whether the notification was read or not
+ *       example:
+ *         read: true
+ */
+
+/** 
+ * @swagger
+ * /api/v1/notifications/push:
+ *   get:
+ *     summary: Get notifications
+ *     parameters:
+ *       - in: query
+ *         name: user_id
+ *         schema:
+ *           type: string
+ *         description: User ID linked to the notifications 
+ *       - in: query
+ *         name: read
+ *         schema:
+ *           type: bool
+ *         description: Boolean to indicate if the notifications were read
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *         description: The numbers of items to return
+ *       - in: query
+ *         name: next_cursor
+ *         schema:
+ *           type: string
+ *         description: Pointer of the next item to return
+ *     responses:
+ *       200:
+ *         description: Notification retrieved
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/SuccessResponse'
+ *       500:
+ *         description: Internal Server Error - An error occurred while processing the request.
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/ErrorResponse'
+ * 
+ */
 pushNotificationsRouter.get('/notifications/push', validateRequest(GetPushNotificationSchema), pushNotificationController.getNotifications);
 
 /** 
@@ -91,5 +147,37 @@ pushNotificationsRouter.get('/notifications/push', validateRequest(GetPushNotifi
  * 
  */
 pushNotificationsRouter.post('/notifications/push', validateRequest(CreatePushNotificationSchema), pushNotificationController.createNotification);
+
+/** 
+ * @swagger
+ * /api/v1/notifications/push/{notification_id}:
+ *   patch:
+ *     summary: Update a notification
+ *     tags:
+ *       - PatchSubscriber
+ *     requestBody:
+ *       content: 
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             $ref: '#components/schemas/PatchSubscriber'
+ *     responses:
+ *       200:
+ *         description: Notification updated
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/SuccessResponse'
+ *       500:
+ *         description: Internal Server Error - An error occurred while processing the request.
+ *         content: 
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               $ref: '#components/schemas/ErrorResponse'
+ * 
+ */
+pushNotificationsRouter.patch('/notifications/push/:notification_id', validateRequest(PatchPushNotificationSchema), pushNotificationController.patchNotification);
 
 export { pushNotificationsRouter };

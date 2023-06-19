@@ -130,6 +130,20 @@ const saveAllNotifications = async (notifications: CreatePushNotification []) =>
     }
 }
 
+const updateNotification = async (notification: UpdatePushNotification) => {
+    try {
+        console.log(notification);
+        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
+        const options = { returnOriginal: false };
+        const document = await PushNotificationModel.findOneAndUpdate(filter, notification, options);
+        const updateResult = _documentToPushNotification(document);
+        return updateResult;
+    } catch (error) {
+        logger.error(error);
+        throw error;
+    }
+}
+
 const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
     const updateOperations = [];
     for (const notification of notifications) {
@@ -165,6 +179,7 @@ const pushNotificationRepository = {
     saveAllNotifications,
     updateAllNotifications,
     findNotificationsByStatus,
+    updateNotification,
 }
 
 export { pushNotificationRepository, PushNotification, UpdatePushNotification, Status };

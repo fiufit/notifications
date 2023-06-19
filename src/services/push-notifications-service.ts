@@ -1,4 +1,4 @@
-import { GetPushNotification, CreatePushNotification } from '@services/schemas';
+import { GetPushNotification, CreatePushNotification, PatchPushNotification } from '@services/schemas';
 import { CreatePushNotificationType } from '@src/controllers/schemas';
 import { pushNotificationRepository, subscriberRepository } from '@src/repositories';
 import { sendPushNotification } from '@utils/expo-utils';
@@ -40,9 +40,18 @@ const createNotification = async (notification: CreatePushNotification) => {
     return [...notificationsToSendSaved, ...notificationsNotToSendSaved];
 };
 
+const patchNotification = async (notificationId: string, patchData: PatchPushNotification) => {
+    const result = await pushNotificationRepository.updateNotification({
+        id: notificationId,
+        read: patchData.read,
+    });
+    return result;
+};
+
 const pushNotificationService = {
     getNotifications,
     createNotification,
+    patchNotification,
 };
   
 export { pushNotificationService };
