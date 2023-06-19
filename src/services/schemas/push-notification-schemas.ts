@@ -1,5 +1,7 @@
-import { CreatePushNotificationType } from '@src/controllers/schemas';
+import { CreatePushNotificationType, GetPushNotificationType } from '@src/controllers/schemas';
+
+type GetPushNotification = GetPushNotificationType['query'];
 
 type CreatePushNotification = CreatePushNotificationType['body'];
 
-export { CreatePushNotification };
+export { GetPushNotification, CreatePushNotification };

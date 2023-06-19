@@ -1,7 +1,7 @@
 import express from 'express';
 import { pushNotificationController } from '@src/controllers';
 import { validateRequest } from '@src/middlewares';
-import { CreatePushNotificationSchema } from '@src/controllers/schemas';
+import { CreatePushNotificationSchema, GetPushNotificationSchema } from '@src/controllers/schemas';
 
 const pushNotificationsRouter = express.Router();
 
@@ -47,6 +47,9 @@ const pushNotificationsRouter = express.Router();
  *         sound: default
  *         data: {}
  */
+
+// TODO: ADD DOCS
+pushNotificationsRouter.get('/notifications/push', validateRequest(GetPushNotificationSchema), pushNotificationController.getNotifications);
 
 /** 
  * @swagger

@@ -1,7 +1,18 @@
-import { CreatePushNotification } from '@services/schemas';
+import { GetPushNotification, CreatePushNotification } from '@services/schemas';
 import { CreatePushNotificationType } from '@src/controllers/schemas';
 import { pushNotificationRepository, subscriberRepository } from '@src/repositories';
 import { sendPushNotification } from '@utils/expo-utils';
+
+const getNotifications = async (query: GetPushNotification) => {
+    const filter: any = {};
+    const options: any = {};
+    if (query.user_id) filter.user_id = query.user_id;
+    if (query.next_cursor) filter.created_at = Buffer.from(query.next_cursor, 'base64').toString();
+    if (query.limit) options.limit = query.limit;
+
+    const notifications = await pushNotificationRepository.findNotifications(filter, options);
+    return notifications;
+}
 
 const createNotification = async (notification: CreatePushNotification) => {
     const { to_user_id: toUserId, title, subtitle, body, sound, data } = notification;
@@ -29,6 +40,7 @@ const createNotification = async (notification: CreatePushNotification) => {
 };
 
 const pushNotificationService = {
+    getNotifications,
     createNotification,
 };
   
