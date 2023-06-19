@@ -8,6 +8,7 @@ const getNotifications = async (query: GetPushNotification) => {
     const options: any = {};
     if (query.user_id) filter.user_id = query.user_id;
     if (query.next_cursor) filter.created_at = Buffer.from(query.next_cursor, 'base64').toString();
+    if (query.read) filter.read = query.read;
     if (query.limit) options.limit = query.limit;
 
     const notifications = await pushNotificationRepository.findNotifications(filter, options);

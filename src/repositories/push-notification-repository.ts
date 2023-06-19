@@ -24,7 +24,7 @@ type PushNotification = {
     read: boolean,
     created_at?: string
 }
-type GetPushNotification = Partial<Pick<PushNotification, "user_id" | 'created_at'>>;
+type GetPushNotification = Partial<Pick<PushNotification, "user_id" | 'created_at' | 'read'>>;
 type CreatePushNotification = Omit<PushNotification, 'id' | 'status' | 'read'>;
 type UpdatePushNotification =  Pick<PushNotification, 'id'> & Partial<Omit<PushNotification, 'id'>>;
 
@@ -55,20 +55,18 @@ const findNotifications = async (query: GetPushNotification, options: { limit?: 
 
     try {
         const documents = await PushNotificationModel.find(queryParams).sort( { "created_at": -1 } ).limit(limit + 1);
+        const pagination = { count: documents.length, limit }
+        if (documents.length === 0) return { notifications: [], pagination }
+
         const nextCursor = Buffer.from((documents[documents.length - 1] as any).created_at.toISOString()).toString('base64');
         if (documents.length > limit) documents.length = limit;
-
         const notifications = documents.map((document) => {
             const notificationResult = _documentToPushNotification(document);
             return notificationResult;
         });
         return {
             notifications,
-            pagination: {
-                count: documents.length,
-                limit,
-                next_cursor: nextCursor,
-            }
+            pagination: { ... pagination, count: documents.length, next_cursor: nextCursor }
         };
     } catch (error) {
         logger.error(error);

@@ -3,6 +3,7 @@ import { z } from "zod";
 const GetPushNotificationSchema = z.object({
     query: z.object({
         user_id: z.string().optional(),
+        read: z.enum(['true', 'false']).transform(read => { return read === 'true' }).optional(),
         limit: z.string().transform(limit => parseInt(limit)).optional(),
         next_cursor: z.string().optional(),
     })
