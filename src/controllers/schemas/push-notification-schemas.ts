@@ -1,5 +1,14 @@
 import { z } from "zod";
 
+const GetPushNotificationSchema = z.object({
+    query: z.object({
+        user_id: z.string().optional(),
+        read: z.enum(['true', 'false']).transform(read => { return read === 'true' }).optional(),
+        limit: z.string().transform(limit => parseInt(limit)).optional(),
+        next_cursor: z.string().optional(),
+    })
+});
+
 const CreatePushNotificationSchema = z.object({
     body: z.object({
         to_user_id: z.string().array(),
@@ -11,6 +20,21 @@ const CreatePushNotificationSchema = z.object({
     })
 })
 
-type CreatePushNotificationType = z.infer<typeof CreatePushNotificationSchema>;
+const PatchPushNotificationSchema = z.object({
+    params: z.object({
+        notification_id: z.string(),
+    }),
+    body: z.object({
+        read: z.boolean().optional(),
+    })
+})
 
-export { CreatePushNotificationSchema, CreatePushNotificationType };
+type CreatePushNotificationType = z.infer<typeof CreatePushNotificationSchema>;
+type GetPushNotificationType = z.infer<typeof GetPushNotificationSchema>;
+type PatchPushNotificationType = z.infer<typeof PatchPushNotificationSchema>;
+
+export {
+    CreatePushNotificationSchema, CreatePushNotificationType,
+    GetPushNotificationSchema, GetPushNotificationType,    
+    PatchPushNotificationSchema, PatchPushNotificationType,
+};
