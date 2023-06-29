@@ -23,11 +23,8 @@ jobs:
         with:
           namespace: notifications-danielovera
 
-      - name: "Deploy application"
-        uses: okteto/apply@latest
-        with:
-          namespace: notifications-danielovera
-          manifest: docker-compose.yml
+      - name: "Build"
+        uses: okteto/build@latest
 
       - name: "Push changes"
         uses: okteto/push@latest
