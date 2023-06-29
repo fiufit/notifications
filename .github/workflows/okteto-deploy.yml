@@ -18,6 +18,19 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      - if: ${{ github.event_name == 'push' }}
-        name: Build and deploy application container
-        uses: okteto/build@latest
+      - name: "Activate Namespace"
+        uses: okteto/namespace@latest
+        with:
+          namespace: notifications-danielovera
+
+      - name: "Deploy application"
+        uses: okteto/apply@latest
+        with:
+          namespace: notifications-danielovera
+          manifest: docker-compose.yml
+
+      - name: "Push changes"
+        uses: okteto/push@latest
+        with:
+          namespace: notifications-danielovera
+          
