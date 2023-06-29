@@ -1,6 +1,6 @@
 import { PushNotification, pushNotificationRepository, Status, UpdatePushNotification } from '@src/repositories/push-notification-repository';
 import { logger } from '@src/config';
-import { 
+import {
     Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushSuccessTicket, ExpoPushReceipt, ExpoPushErrorTicket, ExpoPushErrorReceipt,
 } from 'expo-server-sdk';
 
@@ -12,7 +12,7 @@ enum ExpoStatus {
 }
 
 const _buildExpoNotification = (notification: PushNotification): ExpoPushMessage => {
-    return { 
+    return {
         to: notification.device_token,
         title: notification.title,
         subtitle: notification.subtitle,
@@ -115,104 +115,6 @@ const _sendPushNotificationChunks = async (notificationChunks: { data: ExpoPushM
     return { pendingNotificationsToUpdate, failedNotificationsToUpdate };
 }
 
-const _validateNotificationReceipts = (receipts: { [id: string]: ExpoPushReceipt }, notifications: PushNotification[]) => {
-    const successResults = [];
-    const errorResults = [];
-    let index = 0;
-    for (const receiptId in receipts) {
-        const receipt = receipts[receiptId];
-        if (receipt.status === ExpoStatus.Ok) {
-            const successDetail = {
-                id: notifications[index].id,
-            }
-            successResults.push(successDetail);
-        } else {
-            const errorReceipt = receipt as ExpoPushErrorReceipt;
-            const errorDetail = {
-                id: notifications[index].id,
-                error: errorReceipt.details?.error,
-                message: errorReceipt.message,
-            }
-            errorResults.push(errorDetail);
-        }
-        ++index;
-    }
-    return { successResults, errorResults };
-}
-
-const _processPushNotificationReceiptChunks = async (receiptChunks: { data: { id: string; }; notification: PushNotification; }[][]) => {
-    const successNotificationsToUpdate = [];
-    const failedNotificationsToUpdate = [];
-
-    for (const chunk of receiptChunks) {
-        const receiptIds = chunk.map(receipt => receipt.data.id);
-        const notifications = chunk.map(receipt => receipt.notification);
-        try {
-            const expoReceipts = await expo.getPushNotificationReceiptsAsync(receiptIds);
-            const { successResults, errorResults } = _validateNotificationReceipts(expoReceipts, notifications);
-
-            const successNotifications = successResults.map(result => {
-                const singleSuccessNotification: UpdatePushNotification = {
-                    id: result.id,
-                    status: Status.Delivered,
-                };
-                return singleSuccessNotification;
-            })
-
-            const failedNotifications = errorResults.map(result => {
-                const singleFailedNotification: UpdatePushNotification = {
-                    id: result.id,
-                    status: Status.Failed,
-                };
-                return singleFailedNotification;
-            })
-
-            successNotificationsToUpdate.push(...successNotifications);
-            failedNotificationsToUpdate.push(...failedNotifications);
-        } catch (error) {
-            const failedNotifications: UpdatePushNotification[] = notifications.map(notification => {
-                const singleFailedNotification: UpdatePushNotification = {
-                    id: notification.id,
-                    status: Status.Failed,
-                };
-                return singleFailedNotification;
-            });
-            failedNotificationsToUpdate.push(...failedNotifications);
-            logger.error({ error });
-        }
-    }
-    return { successNotificationsToUpdate, failedNotificationsToUpdate };
-}
-
-const _chunkPushNotificationReceipts = (pendingNotifications: PushNotification[]) => {
-    const receiptIds = pendingNotifications.map(notification => notification.expoReceiptId) as string[];
-    const receiptIdChunks = expo.chunkPushNotificationReceiptIds(receiptIds);
-    const receiptChunks = [];
-    let chunkCounter = 0;
-    let lastChunkLength = 0;
-    for (const chunk of receiptIdChunks) {
-        const receiptChunk = [];
-        for (let index = 0; index < chunk.length; ++index) {
-            receiptChunk.push({
-                data: { id: chunk[index] },
-                notification: pendingNotifications[(lastChunkLength * chunkCounter) + index],
-            });
-        }
-        receiptChunks.push(receiptChunk);
-        lastChunkLength = chunk.length;
-        ++chunkCounter;
-    }
-    return receiptChunks;
-}
-
-const updateNotificationReceipts = async () => {
-    const pendingNotifications = await pushNotificationRepository.findNotificationsByStatus(Status.Pending);
-    const receiptChunks = _chunkPushNotificationReceipts(pendingNotifications);
-    const { successNotificationsToUpdate, failedNotificationsToUpdate } = await _processPushNotificationReceiptChunks(receiptChunks);
-    const notificationsToUpdate = [...successNotificationsToUpdate, ...failedNotificationsToUpdate];
-    await pushNotificationRepository.updateAllNotifications(notificationsToUpdate);
-}
-
 const sendPushNotification = async (notifications: PushNotification[]) => {
     const notificationChunks = _chunkPushNotifications(notifications);
     const { pendingNotificationsToUpdate, failedNotificationsToUpdate } = await _sendPushNotificationChunks(notificationChunks);
@@ -220,4 +122,4 @@ const sendPushNotification = async (notifications: PushNotification[]) => {
     return await pushNotificationRepository.updateAllNotifications(notificationsToUpdate);
 }
 
-export { sendPushNotification, updateNotificationReceipts };
+export { sendPushNotification };

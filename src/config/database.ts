@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { env } from '@src/config/env';
 import { logger } from '@src/config/logger';
-import { cron } from '@config/cron';
 
 /**
  * @description Configure event listeners to the database.
@@ -13,11 +12,6 @@ const _configureEventListeners = () => {
 
   mongoose.connection.on('disconnecting', () => {
     logger.info('Disconnecting from the database');
-  });
-
-  mongoose.connection.on('connected', () => {
-    logger.info('Database connection established');
-    cron.scheduleCheckReceipts();
   });
 
   mongoose.connection.on('disconnected', () => {
