@@ -21,7 +21,7 @@ jobs:
       - name: "Activate Namespace"
         uses: okteto/namespace@latest
         with:
-          name: notifications-danielovera
+          namespace: notifications-danielovera
 
       - name: "Deploy application"
         uses: okteto/apply@latest
