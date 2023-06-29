@@ -80,7 +80,6 @@ const _sendPushNotificationChunks = async (notificationChunks: { data: ExpoPushM
         try {
             const ticketChunk = await expo.sendPushNotificationsAsync(data);
             const { receipts, errors } = _getReceiptsFromTickets(ticketChunk, notifications);
-
             const pendingNotifications = receipts.map(receipt => {
                 const singlePendingNotification: UpdatePushNotification = {
                     id: receipt.notificationId,
