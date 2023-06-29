@@ -24,7 +24,7 @@ jobs:
           namespace: notifications-danielovera
           
       - name: "Create stack"
-        uses: okteto/deploy-stack@latest
+        uses: okteto/deploy@latest
         with:
           build: "true"
           
