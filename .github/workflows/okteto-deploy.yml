@@ -18,26 +18,6 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      #- if: ${{ github.event_name == 'pull_request' }}
-      #  name: Deploy a preview environment
-      #  uses: okteto/deploy-preview@2.12.0
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    name: staging-${{ github.event.number }}-danielovera
-      #    scope: personal
-      #    timeout: 15m
-
-      #- if: ${{ github.event_name == 'pull_request' }}
-      #  name: Check preview environment
-      #  uses: nev7n/wait_for_response@v1
-      #  with:
-      #    url: https://web-staging-${{ github.event.number }}-danielovera.cloud.okteto.net/
-      #    responseCode: 200
-      #    timeout: 4000
-
       - if: ${{ github.event_name == 'push' }}
         name: Build and deploy application container
         uses: okteto/build@latest
-        with:
-          file: docker-compose.yml
