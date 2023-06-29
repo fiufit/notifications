@@ -1,6 +1,8 @@
 import pino from 'pino';
+import dotenv from 'dotenv';
+dotenv.config();
 
-const logLevelOptions = ['fatal', 'error', 'warn', 'info', 'debug', 'trace'];
+const logLevelOptions = ['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'];
 
 // Logger config
 const logger = pino({
@@ -10,7 +12,7 @@ const logger = pino({
       colorize: true,
     },
   },
-  level: logLevelOptions[3],
+  level: process.env.ENVIRONMENT === 'testing' ? logLevelOptions[6] : logLevelOptions[3],
 });
 
 export { logger };

@@ -1,52 +1,10 @@
 import { logger } from '@src/config';
-import { CreatePushNotificationType } from '@src/controllers/schemas';
-import mongoose from 'mongoose';
 import { MongoBulkWriteError, BulkWriteResult } from 'mongodb';
+import { PushNotification, PushNotificationModel, Types, Status } from "@models/push-notification-model";
 
-enum Status {
-    Delivered = 'Delivered',
-    Pending = 'Pending',
-    Failed = 'Failed',
-    NotSent = 'NotSent'
-}
-
-type PushNotification = {
-    id: string,
-    user_id: string,
-    device_token: string,
-    title: string,
-    subtitle?: string,
-    body?: string,
-    sound?: CreatePushNotificationType['body']['sound'],
-    status?: Status,
-    expoReceiptId?: string,
-    data?: any,
-    read: boolean,
-    created_at?: string
-}
 type GetPushNotification = Partial<Pick<PushNotification, "user_id" | 'created_at' | 'read'>>;
 type CreatePushNotification = Omit<PushNotification, 'id' | 'status' | 'read'>;
 type UpdatePushNotification =  Pick<PushNotification, 'id'> & Partial<Omit<PushNotification, 'id'>>;
-
-const pushNotificationSchema = new mongoose.Schema({
-    user_id: { type: String, required: true },
-    device_token: { type: String, required: true },
-    title: { type: String, required: true },
-    subtitle: { type: String },
-    body: { type: String },
-    sound: { type: String },
-    status: { type: String, enum: (Object.keys(Status) as Array<keyof typeof Status>).map(key => Status[key]), default: Status.NotSent },
-    expoReceiptId: { type: String },
-    data: { type: Object },
-    read: { type: Boolean, default: false }
-}, { 
-    collection: 'push_notifications', 
-    timestamps: {
-        createdAt: 'created_at',
-        updatedAt: 'updated_at'
-  }}
-);
-const PushNotificationModel = mongoose.model('PushNotification', pushNotificationSchema);
 
 const findNotifications = async (query: GetPushNotification, options: { limit?: number }) => {
     const { limit = 20 } = options;
@@ -132,8 +90,7 @@ const saveAllNotifications = async (notifications: CreatePushNotification []) =>
 
 const updateNotification = async (notification: UpdatePushNotification) => {
     try {
-        console.log(notification);
-        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
+        const filter = { _id: Types.ObjectId(notification.id) };
         const options = { returnOriginal: false };
         const document = await PushNotificationModel.findOneAndUpdate(filter, notification, options);
         const updateResult = _documentToPushNotification(document);
@@ -147,7 +104,7 @@ const updateNotification = async (notification: UpdatePushNotification) => {
 const _buildUpdateOperations = (notifications: UpdatePushNotification[]) => {
     const updateOperations = [];
     for (const notification of notifications) {
-        const filter = { _id: new mongoose.Types.ObjectId(notification.id) };
+        const filter = { _id: Types.ObjectId(notification.id) };
         const update = notification;
         const options = { forceServerObjectId: true, ordered: false }; // ESTO NO ESTA BIEN. No existe en mongo para updateOne
         const singleUpdateOperation = { 
