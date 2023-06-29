@@ -38,6 +38,6 @@ jobs:
 
       - if: ${{ github.event_name == 'push' }}
         name: Build and deploy application container
-        uses: okteto/deploy-stack@2.12.0
+        uses: okteto/build@latest
         with:
-          build: true
+          file: docker-compose.yml
