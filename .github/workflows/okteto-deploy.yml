@@ -21,10 +21,15 @@ jobs:
       - name: "Activate Namespace"
         uses: okteto/namespace@latest
         with:
-          namespace: notifications-danielovera
-          
-      - name: "Create stack"
-        uses: okteto/deploy@latest
+          name: notifications-danielovera
+
+      - name: "Deploy application"
+        uses: okteto/apply@latest
         with:
-          build: "true"
+          namespace: notifications-danielovera
+
+      - name: "Push changes"
+        uses: okteto/push@latest
+        with:
+          namespace: notifications-danielovera
           
