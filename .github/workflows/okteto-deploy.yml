@@ -15,10 +15,6 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      - uses: okteto/namespace@latest
-        with:
-          namespace: notifications-danielovera
-
       - name: Build and deploy application container
         uses: okteto/deploy-stack@2.12.0
         with:
