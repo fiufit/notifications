@@ -27,6 +27,7 @@ jobs:
         uses: okteto/apply@latest
         with:
           namespace: notifications-danielovera
+          manifest: docker-compose.yml
 
       - name: "Push changes"
         uses: okteto/push@latest
