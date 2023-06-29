@@ -1,7 +1,7 @@
 import { PushNotification, pushNotificationRepository, Status, UpdatePushNotification } from '@src/repositories/push-notification-repository';
 import { logger } from '@src/config';
 import {
-    Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushSuccessTicket, ExpoPushReceipt, ExpoPushErrorTicket, ExpoPushErrorReceipt,
+    Expo, ExpoPushMessage, ExpoPushTicket, ExpoPushSuccessTicket, ExpoPushErrorTicket,
 } from 'expo-server-sdk';
 
 const expo = new Expo();
