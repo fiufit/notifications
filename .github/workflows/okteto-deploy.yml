@@ -2,10 +2,7 @@ name: Okteto deploy
 
 on:
   push: 
-    branches: [main]
-  pull_request:
-    branches: [main]
-    
+    branches: [main]    
 jobs:
   deploy:
     permissions: write-all
@@ -18,19 +15,13 @@ jobs:
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
 
-      - name: "Activate Namespace"
-        uses: okteto/namespace@latest
+      - uses: okteto/namespace@latest
         with:
           namespace: notifications-danielovera
 
-      - name: "Deploy application"
-        uses: okteto/apply@latest
+      - name: Build and deploy application container
+        uses: okteto/deploy-stack@2.12.0
         with:
           namespace: notifications-danielovera
-          manifest: docker-compose.yml
-
-      - name: "Push changes"
-        uses: okteto/push@latest
-        with:
-          namespace: notifications-danielovera
+          build: "true"
           
