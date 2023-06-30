@@ -1,5 +1,11 @@
+<p align="center">
+  <img alt="App" src="https://github.com/fiufit/app/assets/86434696/82a49b69-d7bd-4f7d-9449-79b8b60335b1" height="200" />
+</p>
+
 # FIUFIT - Notificaciones API
 Microservicio de notificaciones
+
+[![codecov](https://codecov.io/gh/fiufit/gateway/branch/main/graph/badge.svg?token=NRRA48UTP5)](https://codecov.io/gh/fiufit/notifications)
 
 [Documentacion de la API](https://notifications-notifications-danielovera.cloud.okteto.net/api/v1/docs/)
 
