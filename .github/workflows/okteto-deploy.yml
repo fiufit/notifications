@@ -19,9 +19,8 @@ jobs:
         uses: okteto/namespace@latest
         with:
           namespace: notifications-danielovera
-
-      - name: "Build"
-        uses: okteto/build@latest
         
       - name: "Create stack"
         uses: okteto/deploy-stack@latest
+        with:
+          build: "true"
