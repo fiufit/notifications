@@ -5,12 +5,14 @@ enum Name {
   HOST = 'HOST',
   PORT = 'PORT',
   DB_URI = 'DB_URI',
+  ENVIRONMENT = 'ENVIRONMENT',
 }
 
 // Default values
 const DEFAULT_HOST = '0.0.0.0';
 const DEFAULT_PORT = 8080;
 const DEFAULT_DB_URI = '';
+const DEFAULT_ENVIRONMENT = 'development';
 
 // Set environment variables
 logger.info('Reading environment variables');
@@ -64,11 +66,21 @@ const _getDatabaseURI = (databaseURI?: string): string => {
   return databaseURI;
 };
 
+const _getEnvironment = (environment?: string): string => {
+  if (!environment) {
+    logger.warn(`${Name.ENVIRONMENT} env variable not found`);
+    return DEFAULT_ENVIRONMENT;
+
+  }
+  return environment;
+};
+
 // Enviroment variable values
 const env = {
   host: _getHost(process.env.HOST),
   port: _getPort(process.env.PORT),
   databaseURI: _getDatabaseURI(process.env.DB_URI),
+  environment: _getEnvironment(process.env.ENVIRONMENT),
 };
 
 export { env };

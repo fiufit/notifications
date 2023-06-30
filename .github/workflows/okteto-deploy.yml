@@ -2,10 +2,7 @@ name: Okteto deploy
 
 on:
   push: 
-    branches: [main]
-  pull_request:
-    branches: [main]
-    
+    branches: [main]    
 jobs:
   deploy:
     permissions: write-all
@@ -14,30 +11,16 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Login to Okteto Cloud
-        uses: okteto/context@2.12.0
+        uses: okteto/context@latest
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
-
-      #- if: ${{ github.event_name == 'pull_request' }}
-      #  name: Deploy a preview environment
-      #  uses: okteto/deploy-preview@2.12.0
-      #  env:
-      #    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #  with:
-      #    name: staging-${{ github.event.number }}-danielovera
-      #    scope: personal
-      #    timeout: 15m
-
-      #- if: ${{ github.event_name == 'pull_request' }}
-      #  name: Check preview environment
-      #  uses: nev7n/wait_for_response@v1
-      #  with:
-      #    url: https://web-staging-${{ github.event.number }}-danielovera.cloud.okteto.net/
-      #    responseCode: 200
-      #    timeout: 4000
-
-      - if: ${{ github.event_name == 'push' }}
-        name: Build and deploy application container
-        uses: okteto/deploy-stack@2.12.0
+          
+      - name: Create devlopment environments namespace
+        uses: okteto/namespace@latest
         with:
-          build: true
+          namespace: notifications-danielovera
+        
+      - name: "Create stack"
+        uses: okteto/deploy-stack@latest
+        with:
+          build: "true"

@@ -1,10 +1,28 @@
 import { Request, Response } from 'express';
-import { CreatePushNotificationType } from '@controllers/schemas';
+import { GetPushNotificationType, CreatePushNotificationType, PatchPushNotificationType } from '@controllers/schemas';
 import { responseUtils } from '@src/utils';
 import { pushNotificationService } from '@src/services';
 import { Issue } from '@src/utils/response-utils';
-import { logger } from '@typegoose/typegoose/lib/logSettings';
 import httpStatus from 'http-status';
+import { logger } from '@src/config';
+
+const getNotifications = async (request: Request, response: Response) => {
+    const { query } = request as unknown as GetPushNotificationType;
+
+    try {
+        const notifications = await pushNotificationService.getNotifications(query);
+        const successResponse = responseUtils.createSuccessResponse(notifications);
+        response.status(httpStatus.OK).send(successResponse);
+    } catch (error: any) {
+        const errorResponse = responseUtils.createErrorResponse({
+            code: Issue.InternalServerError.code,
+            error: error.name,
+            message: error.message,
+        });
+        response.status(httpStatus.INTERNAL_SERVER_ERROR).send(errorResponse);
+        logger.error(errorResponse);
+    }
+}
 
 const createNotification = async (request: Request, response: Response) => {
     const { body } = request as CreatePushNotificationType;
@@ -32,8 +50,29 @@ const createNotification = async (request: Request, response: Response) => {
     }
 };
 
+const patchNotification = async (request: Request, response: Response) => {
+    try {
+        const { body, params } = request as unknown as PatchPushNotificationType;
+        const notificationId = params.notification_id;
+        const notification = await pushNotificationService.patchNotification(notificationId, body);
+        const successResponse = responseUtils.createSuccessResponse(notification);
+        response.status(httpStatus.OK).send(successResponse);
+    } catch (error: any) {
+        const errorResponse = responseUtils.createErrorResponse({
+            code: Issue.InternalServerError.code,
+            error: error.name,
+            message: error.message,
+        });
+        response.status(httpStatus.INTERNAL_SERVER_ERROR).send(errorResponse);
+        logger.error(errorResponse);
+    }    
+}
+
+
 const pushNotificationController = {
+    getNotifications,
     createNotification,
+    patchNotification
 };
   
 export { pushNotificationController };
