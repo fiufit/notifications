@@ -12,7 +12,7 @@ services:
       dockerfile: Dockerfile
       target: base
     expose:
-      - 7777
+      - ${PORT}
     ports:
-      - 7777:7777
+      - ${PORT}:${PORT}
     command: npm run start
