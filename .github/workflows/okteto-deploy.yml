@@ -14,10 +14,12 @@ jobs:
         uses: okteto/context@latest
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
-
-      - name: Build and deploy application container
-        uses: okteto/deploy-stack@2.12.0
+          
+      - name: Create devlopment environments namespace
+        uses: okteto/namespace@latest
         with:
           namespace: notifications-danielovera
-          build: "true"
+
+      - name: "Build"
+        uses: okteto/build@latest
           
