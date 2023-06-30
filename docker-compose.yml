@@ -3,6 +3,10 @@ version: "3.8"
 services:
   notifications:
     container_name: notifications
+    environment:
+      - PORT=${PORT}
+      - HOST=${HOST}
+      - DB_URI=${DB_URI}
     build:
       context: .
       dockerfile: Dockerfile
