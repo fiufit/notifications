@@ -22,4 +22,6 @@ jobs:
 
       - name: "Build"
         uses: okteto/build@latest
-          
+        
+      - name: "Create stack"
+        uses: okteto/deploy-stack@latest
